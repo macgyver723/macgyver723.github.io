@@ -81,7 +81,7 @@
             
             function getForecastGridDataUrl(lat, long) {
                 let url = "";
-                const response = fetch('https://api.weather.gov/points/' + lat + ',' + long + '-71.5616')
+                const response = fetch('https://api.weather.gov/points/' + lat.toFixed(4) + ',' + long.toFixed(4) + '-71.5616')
                     .then(response => response.json())
                     .then(data => data['properties']['forecastGridData'])
                 
@@ -100,7 +100,7 @@
                 response.then(value => {
                     dewPointInC = value;
                 })
-                return (9/5 * value) + 32
+                return (9/5 * value) + 32;
             }
             getLocation();
 
