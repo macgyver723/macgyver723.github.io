@@ -48,26 +48,63 @@
     <body>
         <div class="title">
             <h1>The Dew Point is</h1>
-            <p>50 &deg;F</p>
+            <p id="dewPoint">50 &deg;F</p>
         </div>
         <div>
             <p id="demo"></p>
         </div>
         <script>
             let x = document.getElementById("demo");
-            function getLocation() {                
-                if (navigator.geolocation) {
-                    navigator.geolocation.getCurrentPosition(showPosition);
+            let latitude = 0;
+            let longitude = 0;
+
+            function getLocation() {   
+                let geo = navigator.geolocation;             
+                if (geo) {
+                    geo.getCurrentPosition(parsePosition);
                 } else {
                     x.innerHTML = "Geolocation is not supported by this browser.";
                 }
             }
             
-            function showPosition(position) {
+            function parsePosition(position) {
+                // console.log(position);
+                latitude = position.coords.latitude;
+                longitude = position.coords.longitude;
                 x.innerHTML = "Latitude: " + position.coords.latitude +
                 "<br>Longitude: " + position.coords.longitude;
+                let url = getForecastGridDataUrl(latitude, longitude);
+                console.log(url);
+                let dewPoint = getDewPointInF(url);
+                console.log(dewPoint);
+            }
+            
+            function getForecastGridDataUrl(lat, long) {
+                let url = "";
+                const response = fetch('https://api.weather.gov/points/' + lat + ',' + long + '-71.5616')
+                    .then(response => response.json())
+                    .then(data => data['properties']['forecastGridData'])
+                
+                response.then(value => {
+                    url = value;
+                })
+                return url;
+            }       
+
+            function getDewPointInF(forecastGridUrl) {
+                let dewPointInC = 0;
+                const response = fetch(forecastGridUrl)
+                .then(response => response.json())
+                .then(data => data['properties']['dewpoint']['values'][0]['value'])
+
+                response.then(value => {
+                    dewPointInC = value;
+                })
+                return (9/5 * value) + 32
             }
             getLocation();
+
+            
             </script>
     </body>
 </html>
