@@ -55,8 +55,22 @@
         </div>
         <script>
             let x = document.getElementById("demo");
-            let latitude = 0;
-            let longitude = 0;
+
+            function updateDewPoint() {
+                // get location lat, long
+                let latitude = 0
+                let longitude = 0
+                getLocation()
+                // get station url
+                const stationUrlPromise = getForecastGridDataUrl(latitude, longitude)
+                // get dewpoint
+                const dewPointPromise = getDewPointInF(stationUrlPromise)
+                // update HTML
+                dewPointPromise
+                    .then(dewPoint => {
+                        document.getElementById('dewPoint').innerHTML = dewPoint + "&deg; F"
+                    })
+            }
 
             function getLocation() {   
                 let geo = navigator.geolocation;             
@@ -68,39 +82,51 @@
             }
             
             function parsePosition(position) {
-                // console.log(position);
-                latitude = position.coords.latitude;
-                longitude = position.coords.longitude;
-                x.innerHTML = "Latitude: " + position.coords.latitude +
-                "<br>Longitude: " + position.coords.longitude;
-                let url = getForecastGridDataUrl(latitude, longitude);
-                console.log(url);
-                let dewPoint = getDewPointInF(url);
-                console.log(dewPoint);
+                console.log("Latitude: " + position.coords.latitude);
+                console.log("Longitude: " + position.coords.longitude);
+                // latitude = position.coords.latitude;
+                // longitude = position.coords.longitude;
+                // x.innerHTML = "Latitude: " + position.coords.latitude +
+                // "<br>Longitude: " + position.coords.longitude;
+                // let url = getForecastGridDataUrl(latitude, longitude);
+                // console.log(url);
+                // let dewPoint = getDewPointInF(url);
+                // console.log(dewPoint);
+                latitide = position.coords.latitude
+                longitude = position.coords.longitude
             }
             
             function getForecastGridDataUrl(lat, long) {
-                let url = "";
                 const response = fetch('https://api.weather.gov/points/' + lat.toFixed(4) + ',' + long.toFixed(4))
                     .then(response => response.json())
                     .then(data => data['properties']['forecastGridData'])
+                    // .then(url => {
+                    //     getDewPointInF(url)
+                    // })
+                    // .then(dewPoint => console.log(dewPoint))
                 
-                response.then(value => {
-                    url = value;
-                })
-                return url;
+                // response.then(value => {
+                //     url = value;
+                // })
+                // return url;
+                return response;
             }       
 
-            function getDewPointInF(forecastGridUrl) {
-                let dewPointInC = 0;
-                const response = fetch(forecastGridUrl)
+            function getDewPointInF(urlPromise) {
+                const response = urlPromise
+                .then(forecastGridUrl => fetch(forecastGridUrl))
                 .then(response => response.json())
                 .then(data => data['properties']['dewpoint']['values'][0]['value'])
+                .then(value => {
+                    return (9/5 * value) + 32;
+                });
+                // console.log(response);
 
-                response.then(value => {
-                    dewPointInC = value;
-                })
-                return (9/5 * value) + 32;
+                // response.then(value => {
+                //     dewPointInC = value;
+                // })
+                // return (9/5 * value) + 32;
+                return response;
             }
             getLocation();
 
