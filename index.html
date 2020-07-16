@@ -58,9 +58,7 @@
             let longitude = 0
 
             function updateDewPoint() {
-                // get location lat, long
-                
-                getLocation()
+                              
                 // get station url
                 const stationUrlPromise = getForecastGridDataUrl(latitude, longitude)
                 console.log("stationUrlPromise: ")
@@ -134,6 +132,7 @@
                 // return (9/5 * value) + 32;
                 return response;
             }
+            getLocation()
             updateDewPoint();
 
             
