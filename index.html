@@ -54,12 +54,12 @@
             <p id="demo"></p>
         </div>
         <script>
-            let x = document.getElementById("demo");
+            let latitude = 0
+            let longitude = 0
 
             function updateDewPoint() {
                 // get location lat, long
-                let latitude = 0
-                let longitude = 0
+                
                 getLocation()
                 // get station url
                 const stationUrlPromise = getForecastGridDataUrl(latitude, longitude)
