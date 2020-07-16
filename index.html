@@ -78,6 +78,7 @@
                 let geo = navigator.geolocation;             
                 if (geo) {
                     geo.getCurrentPosition(parsePosition);
+                    updateDewPoint();
                 } else {
                     x.innerHTML = "Geolocation is not supported by this browser.";
                 }
@@ -133,8 +134,6 @@
                 return response;
             }
             getLocation()
-            updateDewPoint();
-
             
             </script>
     </body>
