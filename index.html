@@ -54,10 +54,8 @@
             <p id="demo"></p>
         </div>
         <script>
-            let latitude = 0
-            let longitude = 0
 
-            function updateDewPoint() {
+            function updateDewPoint(latitude, longitude) {
                               
                 // get station url
                 const stationUrlPromise = getForecastGridDataUrl(latitude, longitude)
@@ -94,9 +92,8 @@
                 // console.log(url);
                 // let dewPoint = getDewPointInF(url);
                 // console.log(dewPoint);
-                latitude = position.coords.latitude
-                longitude = position.coords.longitude
-                updateDewPoint();
+
+                updateDewPoint(position.coords.latitude, position.coords.longitude);
 
             }
             
