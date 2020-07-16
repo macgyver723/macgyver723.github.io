@@ -60,11 +60,11 @@
             function updateDewPoint() {
                               
                 // get station url
-                const stationUrlPromise = getForecastGridDataUrl(latitude, longitude)
+                const stationUrlPromise = await getForecastGridDataUrl(latitude, longitude)
                 console.log("stationUrlPromise: ")
                 console.log(stationUrlPromise)
                 // get dewpoint
-                const dewPointPromise = getDewPointInF(stationUrlPromise)
+                const dewPointPromise = await getDewPointInF(stationUrlPromise)
                 console.log("dewPointPromise: ")
                 console.log(dewPointPromise);
                 // update HTML
@@ -99,7 +99,7 @@
                 longitude = position.coords.longitude
             }
             
-            function getForecastGridDataUrl(lat, long) {
+            async function getForecastGridDataUrl(lat, long) {
                 let fetchUrl = 'https://api.weather.gov/points/' + lat.toFixed(4) + ',' + long.toFixed(4)
                 console.log('fetchUrl: ' + fetchUrl)
                 const response = fetch(fetchUrl)
@@ -117,7 +117,7 @@
                 return response;
             }       
 
-            function getDewPointInF(urlPromise) {
+            async function getDewPointInF(urlPromise) {
                 const response = urlPromise
                 .then(forecastGridUrl => fetch(forecastGridUrl))
                 .then(response => response.json())
