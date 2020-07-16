@@ -60,11 +60,11 @@
             function updateDewPoint() {
                               
                 // get station url
-                const stationUrlPromise = await getForecastGridDataUrl(latitude, longitude)
+                const stationUrlPromise = getForecastGridDataUrl(latitude, longitude)
                 console.log("stationUrlPromise: ")
                 console.log(stationUrlPromise)
                 // get dewpoint
-                const dewPointPromise = await getDewPointInF(stationUrlPromise)
+                const dewPointPromise = getDewPointInF(stationUrlPromise)
                 console.log("dewPointPromise: ")
                 console.log(dewPointPromise);
                 // update HTML
@@ -78,7 +78,6 @@
                 let geo = navigator.geolocation;             
                 if (geo) {
                     geo.getCurrentPosition(parsePosition);
-                    updateDewPoint();
                 } else {
                     x.innerHTML = "Geolocation is not supported by this browser.";
                 }
@@ -97,9 +96,11 @@
                 // console.log(dewPoint);
                 latitide = position.coords.latitude
                 longitude = position.coords.longitude
+                updateDewPoint();
+
             }
             
-            async function getForecastGridDataUrl(lat, long) {
+            function getForecastGridDataUrl(lat, long) {
                 let fetchUrl = 'https://api.weather.gov/points/' + lat.toFixed(4) + ',' + long.toFixed(4)
                 console.log('fetchUrl: ' + fetchUrl)
                 const response = fetch(fetchUrl)
@@ -117,7 +118,7 @@
                 return response;
             }       
 
-            async function getDewPointInF(urlPromise) {
+            function getDewPointInF(urlPromise) {
                 const response = urlPromise
                 .then(forecastGridUrl => fetch(forecastGridUrl))
                 .then(response => response.json())
